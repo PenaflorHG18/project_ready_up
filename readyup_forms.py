@@ -1,12 +1,19 @@
 from flask_wtf import FlaskForm
-from wtforms.fields import StringField, SubmitField, SelectField
-from wtforms.fields.html5 import EmailField, IntegerField
-from wtforms.validators import InputRequired, Email, Optional
+from wtforms.fields import StringField, SubmitField, PasswordField
+from wtforms.fields.html5 import EmailField
+from wtforms.validators import InputRequired, Email, EqualTo, Length
 
 class PlayerRegisterForm(FlaskForm):
     username = StringField("Username:", validators=[InputRequired()])
+    password = PasswordField("Password: ", validators=[InputRequired(), Length(min=8, max=256)])
+    confirm_password = PasswordField("Confirm Password: ", validators=[EqualTo('password')])
     email = EmailField("Email:", validators=[InputRequired()])
     submit = SubmitField("Register")
+
+class LoginForm(FlaskForm):
+    username = StringField("Username:", validators=[InputRequired()])
+    password = PasswordField("Password: ", validators=[InputRequired(), Length(min=8, max=256)])
+    submit = SubmitField("Login")
 
 class GameForm(FlaskForm):
     title = StringField("Title:", validators=[InputRequired()])
