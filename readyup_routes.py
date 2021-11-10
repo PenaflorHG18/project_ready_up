@@ -57,4 +57,4 @@ def post_register_form():
 
 @app.post('/home/')
 def load_home_page():
-    
+    pass
