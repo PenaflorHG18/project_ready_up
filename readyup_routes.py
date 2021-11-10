@@ -26,8 +26,9 @@ db = SQLAlchemy(app)
 class User(db.Model):
     __tablename__ = 'Users'
     id = db.Column(db.Integer, primary_key=True)
+    role = db.Column(db.Unicode, nullable=False)
     username = db.Column(db.Uniicode, nullable=False)
-    email = db.Column(db.Unicode, nullable=False)
+    bio = db.Column(db.Unicode, nullable=False)
 
 # database model for game
 class Game(db.Model):
@@ -55,6 +56,6 @@ def post_register_form():
             flash(f"{field}: {error}")
         return redirect(url_for('get_register_form'))
 
-@app.post('/home/')
+@app.get('/home/')
 def load_home_page():
-    
+    pass
