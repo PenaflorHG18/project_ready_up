@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Register</title>
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-/bQdsTh/da6pkI1MST/rWKFNjaCP5gBSY4sEBT38Q/9RBh9AH40zEOg7Hlq2THRZ" crossorigin="anonymous"></script>
+</head>
+<body>
+  <header>
+    <div class="container">
+      {% for message in get_flashed_messages() %}
+        <div class="alert alert-warning d-flex align-items-center alert-dismissible fade show">
+          <button type="button" class="close" data-bs-dismiss="alert"> 
+            &times;
+          </button>
+          {{ message }}
+        </div>
+      {% endfor %}
+    </div>
+  </header>
+  <main>
+    <form method="POST">
+      {{form.hidden_tag()}}
+
+      {{form.email.label}}
+      {{form.email()}}
+      <br>
+      <br>
+      {{form.username.label}}
+      {{form.username()}}
+      <br>
+      {{form.password.label}}
+      {{form.password()}}
+      <br>
+      {{form.confirm_password.label}}
+      {{form.confirm_password()}}
+      <br>
+      {{form.submit()}}
+    </form>
+  </main>
+  <footer>
+    <br>
+    <a href="/register"> Register </a>
+    &emsp;&emsp;&emsp;&emsp;&emsp;
+    <a href="/login"> Login </a>
+    &emsp;&emsp;&emsp;&emsp;&emsp;
+    <a href="/logout"> Logout </a>
+    <br>
+  </footer>
+</body>
+</html>
