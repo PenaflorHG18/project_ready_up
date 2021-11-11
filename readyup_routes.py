@@ -3,8 +3,9 @@ from flask import Flask, request, render_template, redirect, url_for, abort
 from flask import flash
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import backref
+from sqlalchemy.orm.query import Query
 from authentication import Hasher
-from readyup_forms import LoginForm, PlayerRegisterForm
+from readyup_forms import EditProfileForm, LoginForm, PlayerRegisterForm
 from flask_login import UserMixin, LoginManager, login_required
 from flask_login import login_user, logout_user, current_user
 
@@ -45,13 +46,14 @@ def load_user(uid):
 db = SQLAlchemy(app)
 
 # database model for user
-class User(db.Model):
+class User(UserMixin, db.Model):
     __tablename__ = 'Users'
     id = db.Column(db.Integer, primary_key=True)
     role = db.Column(db.Unicode, nullable=False)
     username = db.Column(db.Unicode, nullable=False)
     password_hash = db.Column(db.LargeBinary)
-    bio = db.Column(db.Unicode, nullable=False)
+    bio = db.Column(db.Unicode, nullable=True)
+    email = db.Column(db.Unicode, nullable=False)
 
      # make a write-only password property that just updates the stored hash
     @property
@@ -82,6 +84,7 @@ class Game(db.Model):
 # registration page routes
 @app.get('/register/')
 def get_register_form():
+    # TODO: Make this look nicer using bootstrap
     reg_form = PlayerRegisterForm()
     return render_template('registration.j2', form = reg_form)
 
@@ -92,14 +95,32 @@ def post_register_form():
         new_user = User(role="Player", username=reg_form.username.data, password=reg_form.password.data, email=reg_form.email.data)
         db.session.add(new_user)
         db.session.commit()
+        return redirect(url_for('get_login_form'))
     else:
         for field,error in reg_form.errors.items():
             flash(f"{field}: {error}")
         return redirect(url_for('get_register_form'))
 
+# profile page routes
+@app.route('/profile/')
+@login_required
+def view_profile():
+    # TODO: get the current user and display their information to the screen
+    curr_user = User.query.filter_by(id=db.session['id']).all()
+    return render_template('profile_page.j2', user = curr_user)
+
+@app.get('/profile/edit/')
+@login_required
+def edit_profile():
+    # TODO: get current user and display their information along with a form with which they can update their information.
+    # TODO: create profile icon creation palatte in 'edit_profile.j2' using JS and AJAX
+    form = EditProfileForm()
+    return render_template('edit_profile.j2', form = form)
+
 # login page routes
 @app.get('/login/')
 def get_login_form():
+    # TODO: Make this look nicer using bootstrap
     log_form = LoginForm()
     return render_template('login.j2', form=log_form)
 
@@ -125,8 +146,25 @@ def post_login_form():
             flash(f"{field}: {error}")
         return redirect(url_for('get_login_form'))
 
+# logout
+@app.route("/logout/")
+@login_required
+def logout():
+    logout_user()
+    return redirect(url_for('get_login_form'))
+
+# Matchmaking page
+@app.route('/matchmaking/')
+@login_required
+def load_matchmaking():
+    return render_template('matchmaking_page.j2')
+
 # home page route
 @app.get('/home/')
 @login_required
 def load_home_page():
-    pass
+    return render_template('home_page.j2')
+
+@app.route('/')
+def index():
+    return redirect(url_for('load_home_page'))

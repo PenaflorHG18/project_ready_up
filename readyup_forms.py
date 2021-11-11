@@ -2,6 +2,7 @@ from flask_wtf import FlaskForm
 from wtforms.fields import StringField, SubmitField, PasswordField
 from wtforms.fields.html5 import EmailField
 from wtforms.validators import InputRequired, Email, EqualTo, Length
+from wtforms.widgets import TextArea
 
 class PlayerRegisterForm(FlaskForm):
     username = StringField("Username:", validators=[InputRequired()])
@@ -9,6 +10,11 @@ class PlayerRegisterForm(FlaskForm):
     confirm_password = PasswordField("Confirm Password: ", validators=[EqualTo('password')])
     email = EmailField("Email:", validators=[InputRequired()])
     submit = SubmitField("Register")
+
+class EditProfileForm(FlaskForm):
+    bio = StringField("Bio:", widget=TextArea())
+    submit = SubmitField("Save Changes")
+
 
 class LoginForm(FlaskForm):
     username = StringField("Username:", validators=[InputRequired()])
