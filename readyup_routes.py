@@ -1,6 +1,6 @@
 import os, sys
 from flask import Flask, request, render_template, redirect, url_for, abort
-from flask import flash
+from flask import flash, session
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import backref
 from sqlalchemy.orm.query import Query
@@ -106,8 +106,8 @@ def post_register_form():
 @login_required
 def view_profile():
     # TODO: get the current user and display their information to the screen
-    curr_user = User.query.filter_by(id=db.session['id']).all()
-    return render_template('profile_page.j2', user = curr_user)
+    user = User.query.filter_by(username=session.get('curr_user')).first()
+    return render_template('profile_page.j2', user = user)
 
 @app.get('/profile/edit/')
 @login_required
@@ -133,6 +133,7 @@ def post_login_form():
         if user is not None and user.verify_password(log_form.password.data):
             # log user in
             login_user(user)
+            session['curr_user'] = log_form.username.data
             # redirect the user to home page
             next = request.args.get('next')
             if next is None or not next.startswith('/'):
@@ -167,4 +168,4 @@ def load_home_page():
 
 @app.route('/')
 def index():
-    return redirect(url_for('load_home_page'))
+    return redirect(url_for('get_login_form'))
