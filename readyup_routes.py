@@ -54,6 +54,7 @@ class User(UserMixin, db.Model):
     password_hash = db.Column(db.LargeBinary)
     bio = db.Column(db.Unicode, nullable=True)
     email = db.Column(db.Unicode, nullable=False)
+    last_active = db.Column(db.Float, nullable=False)
 
      # make a write-only password property that just updates the stored hash
     @property
@@ -92,7 +93,7 @@ def get_register_form():
 def post_register_form():
     reg_form = PlayerRegisterForm()
     if reg_form.validate():
-        new_user = User(role="Player", username=reg_form.username.data, password=reg_form.password.data, email=reg_form.email.data)
+        new_user = User(role="Player", username=reg_form.username.data, password=reg_form.password.data, email=reg_form.email.data, last_active=0.0)
         db.session.add(new_user)
         db.session.commit()
         return redirect(url_for('get_login_form'))
@@ -106,16 +107,39 @@ def post_register_form():
 @login_required
 def view_profile():
     # TODO: get the current user and display their information to the screen
+    edit = False
     user = User.query.filter_by(username=session.get('curr_user')).first()
-    return render_template('profile_page.j2', user = user)
+    return render_template('profile_page.j2', user = user, edit = edit)
 
 @app.get('/profile/edit/')
 @login_required
 def edit_profile():
     # TODO: get current user and display their information along with a form with which they can update their information.
     # TODO: create profile icon creation palatte in 'edit_profile.j2' using JS and AJAX
+    edit = True
     form = EditProfileForm()
-    return render_template('edit_profile.j2', form = form)
+    user = User.query.filter_by(username=session.get('curr_user')).first()
+    return render_template('profile_page.j2', form = form, user = user, edit = edit)
+
+@app.post('/profile/edit/')
+def post_edit_form():
+    form = EditProfileForm()
+    user = User.query.filter_by(username=session.get('curr_user')).first()
+    if form.validate():
+        if form.username.data != '':
+            user.username = form.username.data
+            session['curr_user'] = form.username.data
+        if form.email.data != '':
+            user.email = form.email.data
+        if form.bio.data != '':
+            user.bio = form.bio.data
+        db.session.add(user)
+        db.session.commit()
+        return redirect(url_for('view_profile'))
+    else:
+        for field,error in form.errors.items():
+            flash(f"{field}: {error}")
+        return redirect(url_for('edit_profile'))
 
 # login page routes
 @app.get('/login/')
@@ -162,10 +186,10 @@ def load_matchmaking():
 
 # home page route
 @app.get('/home/')
-@login_required
 def load_home_page():
     return render_template('home_page.j2')
 
 @app.route('/')
 def index():
+    user = User.query.filter_by(username=session.get('curr_user')).first()
     return redirect(url_for('get_login_form'))

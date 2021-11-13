@@ -1,3 +1,4 @@
+from typing import Optional
 from flask_wtf import FlaskForm
 from wtforms.fields import StringField, SubmitField, PasswordField
 from wtforms.fields.html5 import EmailField
@@ -12,6 +13,8 @@ class PlayerRegisterForm(FlaskForm):
     submit = SubmitField("Register")
 
 class EditProfileForm(FlaskForm):
+    username = StringField("New Username:")
+    email = EmailField("New Email:")
     bio = StringField("Bio:", widget=TextArea())
     submit = SubmitField("Save Changes")
 
