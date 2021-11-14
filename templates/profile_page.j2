@@ -41,10 +41,10 @@
     </nav>
 
     {% if not edit %}
-        <div>
+        <div class="mx-auto my-4 w-50">
             <h1> Welcome to Your Profile </h1>
         </div>
-        <div>
+        <div class="mx-auto my-4 w-50">
             <p> Username: {{user.username}} </p>
             <p> Email: {{user.email}} </p>
             <p> Bio: {{user.bio}} </p>
@@ -62,22 +62,33 @@
             {% endfor %}
             </div>
         </header>
+        
         <main>
-            <h1> Edit Profile </h1>
-            <form method="POST">
-            {{form.hidden_tag()}}
-            <p> Current Username: {{user.username}} </p>
-            {{form.username.label}}
-            {{form.username()}}
-            <br>
-            <p> Current Email: {{user.email}} </p>
-            {{form.email.label}}
-            {{form.email()}}
-            <br>
-            {{form.bio.label}}
-            {{form.bio()}}
-            <br>
-            {{form.submit()}}
+            <h1 class="mx-auto my-4 w-50"> Edit Profile </h1>
+            <form method="POST" class="mx-auto my-4 w-50" >
+                {{form.hidden_tag()}}
+                <div>
+                    <p> Current Email: {{user.email}} </p>
+                </div>
+                <div class="form-group">
+                    <label for="email-input">New Email: </label>
+                    {{form.email(class="form-control")}}
+                    <br>
+                </div>
+                <div>
+                    <p> Current Username: {{user.username}} </p>
+                </div>
+                <div class="form-group">
+                    <label for="uname">New Username: </label>
+                    {{form.username(class="form-control")}}
+                    <br>
+                </div>
+                <div>
+                    <label class="input-group-text">{{form.bio.label}}</label>
+                    {{form.bio(class="form-control")}}
+                </div>
+                <br>
+                {{form.submit()}}
             </form>
         </main>
     {% endif %}
