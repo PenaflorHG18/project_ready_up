@@ -24,6 +24,20 @@
                 <li class="nav-item">
                     <a class="nav-link" href="/matchmaking/">Matchmaking</a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/addgame/">Add Game</a>
+                </li>
+                {% if role == 0 %}
+                <li class="nav-item">
+                    <a class="nav-link" href="/reviewgames/">Review Games</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/reviewplayers/">Review Players</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/register/admin/">New Admin</a>
+                </li>
+                {% endif %}
                 <li class="nav-item dropdown active">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     Profile<span class="sr-only">(current)</span>
@@ -31,7 +45,6 @@
                     <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                         <a class="dropdown-item" href="/profile/">View Profile</a>
                         <a class="dropdown-item" href="/profile/edit/">Edit Profile</a>
-                        <a class="dropdown-item" href="#">Settings</a>
                     <div class="dropdown-divider"></div>
                         <a class="dropdown-item" href="/logout/">Logout</a>
                     </div>

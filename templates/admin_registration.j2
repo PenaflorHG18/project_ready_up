@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ReadyUp - Register</title>
+  <title>ReadyUp - Register Admin</title>
 
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-/bQdsTh/da6pkI1MST/rWKFNjaCP5gBSY4sEBT38Q/9RBh9AH40zEOg7Hlq2THRZ" crossorigin="anonymous"></script>
@@ -16,6 +16,49 @@
 </head>
 <body>
   <header>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <a class="navbar-brand" href="#">
+            <!--<img src="/images/logo.png" width="100" height="100" alt="">-->
+            ReadyUp
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="/home/">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/matchmaking/">Matchmaking</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/addgame/">Add Game</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/reviewgames/">Review Games</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/reviewplayers/">Review Players</a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="/register/admin/">New Admin<span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Profile
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" href="/profile/">View Profile</a>
+                        <a class="dropdown-item" href="/profile/edit/">Edit Profile</a>
+                    <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="/logout/">Logout</a>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </nav>
     <div class="container">
       {% for message in get_flashed_messages() %}
         <div class="alert alert-warning d-flex align-items-center alert-dismissible fade show">
@@ -30,7 +73,7 @@
   <main>
     <form method="POST" class="mx-auto my-4 w-50" >
       {{form.hidden_tag()}}
-      <h1> ReadyUp - Registration </h1>
+      <h1> Admin Registration </h1>
       <div class="form-group">
         <label for="email-input">Email: </label>
         {{form.email(class="form-control")}}
@@ -52,10 +95,6 @@
         {{form.confirm_password(class="form-control")}}
       </div>
       {{form.submit(class="form-control btn btn-primary")}}
-      <div>
-        <br>
-        <a href="/login/">Already have an account? Login Here!</a>
-      </div>
     </form>
   </main>
 </body>
