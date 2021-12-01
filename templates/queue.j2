@@ -64,17 +64,18 @@
     </nav>
     <body>
         <main>
-            <h1> Welcome to Matchmaking! </h1>
+            <h1> {{game.title}} Player List </h1>
         </main>
         <div class="container">
             <div class="row">
-            {% for game in games %}
+            {% for player in players %}
                 <div class="col-4">
                     <div class="card" style="width: 18rem;">
                         <img class="card-img-top" src="..." alt="Card image cap">
                         <div class="card-body">
-                            <h5 class="card-title">{{game.title}}</h5>
-                            <a href="/queue/{{game.id}}" class="btn btn-primary">Join Queue</a>
+                            <h5 class="card-title">{{player.username}}</h5>
+                            <p class="card-text">{{player.bio}}</p>
+                            <a href="#" class="btn btn-primary">Match!</a>
                         </div>
                     </div>
                 </div>

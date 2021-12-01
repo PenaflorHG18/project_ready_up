@@ -197,7 +197,7 @@ def get_game_form():
 def post_game_form():
     add_form = GameForm()
     if add_form.validate():
-        new_game = Game(title=add_form.title.data)
+        new_game = Game(title=add_form.title.data, status='unapproved')
         db.session.add(new_game)
         db.session.commit()
         flash('Success!')
@@ -247,13 +247,25 @@ def logout():
     logout_user()
     return redirect(url_for('load_home_page'))
 
-## Matchmaking page ##
+## Matchmaking Routes ##
 
-@app.get('/matchmaking/')
+@app.route('/matchmaking/')
 @login_required
 def load_matchmaking():
     role = session.get('curr_role')
-    return render_template('matchmaking_page.j2', role = role)
+    game_list = Game.query.all()
+    return render_template('matchmaking_page.j2', role = role, games = game_list)
+
+@app.route('/queue/<int:id>')
+@login_required
+def load_queue(id):
+    game = Game.query.filter_by(id=id).first()
+    user = User.query.filter_by(username=session.get('curr_user')).first()
+    user.curr_game = id
+    db.session.add(user)
+    db.session.commit()
+    players = User.query.filter_by(curr_game=id).all()
+    return render_template('queue.j2', players = players, game = game)
 
 # !!!!!! For reasons beyond comrehension this was working and then it wasnt !!!!!!
 # def get_load_matchmaking():
