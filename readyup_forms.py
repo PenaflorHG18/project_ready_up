@@ -1,11 +1,18 @@
 from typing import Optional
 from flask_wtf import FlaskForm
-from wtforms.fields import StringField, SubmitField, PasswordField
+from wtforms.fields import StringField, SubmitField, PasswordField, SelectField
 from wtforms.fields.html5 import EmailField
 from wtforms.validators import InputRequired, Email, EqualTo, Length
 from wtforms.widgets import TextArea
 
 class PlayerRegisterForm(FlaskForm):
+    username = StringField("Username:", validators=[InputRequired()])
+    password = PasswordField("Password: ", validators=[InputRequired(), Length(min=8, max=256)])
+    confirm_password = PasswordField("Confirm Password: ", validators=[EqualTo('password')])
+    email = EmailField("Email:", validators=[InputRequired()])
+    submit = SubmitField("Register")
+
+class AdminRegisterForm(FlaskForm):
     username = StringField("Username:", validators=[InputRequired()])
     password = PasswordField("Password: ", validators=[InputRequired(), Length(min=8, max=256)])
     confirm_password = PasswordField("Confirm Password: ", validators=[EqualTo('password')])
@@ -18,6 +25,10 @@ class EditProfileForm(FlaskForm):
     bio = StringField("Bio:", widget=TextArea())
     submit = SubmitField("Save Changes")
 
+class AdminLogin(FlaskForm):
+    username = StringField("Username:", validators=[InputRequired()])
+    password = PasswordField("Password: ", validators=[InputRequired(), Length(min=8, max=256)])
+    submit = SubmitField("Login")
 
 class LoginForm(FlaskForm):
     username = StringField("Username:", validators=[InputRequired()])
@@ -27,3 +38,7 @@ class LoginForm(FlaskForm):
 class GameForm(FlaskForm):
     title = StringField("Title:", validators=[InputRequired()])
     submit = SubmitField("Add to Game List")
+
+class MatchmakingForm(FlaskForm):
+    title = SelectField("Game:", choices=[])
+    submit = SubmitField("Join Matchmaking For This Game")
