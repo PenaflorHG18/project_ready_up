@@ -1,25 +1,36 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
     <meta name="author" content="">
-    <title>ReadyUp</title>
+    <title>ReadyUp - Home</title>
 
     <!-- NOTE: 2 files for Bootstrap 5:
     1. Bootstrap CSS
     4. Bootstrap JavaScript
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
-
     -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-    <script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-/bQdsTh/da6pkI1MST/rWKFNjaCP5gBSY4sEBT38Q/9RBh9AH40zEOg7Hlq2THRZ" crossorigin="anonymous"></script>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous"> 
+    {#<script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-/bQdsTh/da6pkI1MST/rWKFNjaCP5gBSY4sEBT38Q/9RBh9AH40zEOg7Hlq2THRZ" crossorigin="anonymous"></script> #}
+    <link rel="stylesheet" href="/static/styles/homepage.css">
+
+    {# carousel #}
+    <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css">
 </head>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <nav id = "nav-bar" class="navbar navbar-expand-lg ">
         <a class="navbar-brand" href="#">
-            <!--<img src="/images/logo.png" width="100" height="100" alt="">-->
-            ReadyUp
+            <img id = "R" src="/static/images/R.png" width=50 height=80>
+            <img id = "E" src="/static/images/E.png" width=50 height=80>
+            <img id = "A" src="/static/images/A.png" width=50 height=80>
+            <img id = "D" src="/static/images/D.png" width=50 height=80>
+            <img id = "Y" src="/static/images/Y.png" width=50 height=80>
+            <img id = "U" src="/static/images/U.png" width=50 height=80>
+            <img id = "P" src="/static/images/P.png" width=50 height=80> 
         </a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -27,13 +38,27 @@
 
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             {% if logged_in == true %}
-                <ul class="navbar-nav ml-auto">
+                <ul id = "logged-in-nav-bar" class="navbar-nav ms-auto">
                     <li class="nav-item active">
                         <a class="nav-link" href="#">Home<span class="sr-only">(current)</span></a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="/matchmaking/">Matchmaking</a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/addgame/">Add Game</a>
+                    </li>
+                    {% if role == 0 %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="/reviewgames/">Review Games</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/reviewplayers/">Review Players</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/register/admin/">New Admin</a>
+                    </li>
+                    {% endif %}
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         Profile 
@@ -41,16 +66,15 @@
                         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                             <a class="dropdown-item" href="/profile/">View Profile</a>
                             <a class="dropdown-item" href="/profile/edit/">Edit Profile</a>
-                            <a class="dropdown-item" href="#">Settings</a>
                         <div class="dropdown-divider"></div>
                             <a class="dropdown-item" href="/logout/">Logout</a>
                         </div>
                     </li>
                 </ul>
             {% else %}
-                <ul class="navbar-nav ml-auto">
+                <ul id = "logged-out-nav-bar" class="navbar-nav ms-auto">
                     <li class="nav-item active">
-                        <a class="nav-link" href="#">Home<span class="sr-only">(current)</span></a>
+                        <a class="nav-link" href="#">Home<span class="sr-only"></span></a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="/register/">Register</a>
@@ -64,23 +88,140 @@
     </nav>
 <body>
     <main role="main">
-    </main>
-
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
-
-    {%if logged_in == true %}
-        <div class="genreal chat">
-        <h2> Talk in the General Chat! </h2>
-            <widgetbot
-            server="910683723702370345"
-            channel="910683723702370348"
-            width="70%"
-            height="450"
-            ></widgetbot>
-            <script src="https://cdn.jsdelivr.net/npm/@widgetbot/html-embed"></script>
+        {%if logged_in == false%}
+            <h1 id="welcome"> Welcome to READYUP, Login or Register to start exploring!</h1>
+        {%else%}
+            <h1 id="welcome"> Welcome to READYUP!</h1>
+        {%endif%}
+            
+        <div class= "wrapper">
+            <h2>Popular Games</h2>
+            <div class="carousel owl-carousel">
+                <div class="card card-1">
+                    <img class="game-image" src="/static/images/apex.jpg">
+                    <div class="game-info">
+                        <div class="game-title">Apex Legends</div>
+                        <div>
+                            Conquer with character in Apex Legends, a free-to-play battle royale game where legendary challengers fight for glory, 
+                            fame, and fortune on the fringes of the Frontier. Explore a growing roster of diverse characters and experience intense 
+                            tactical squad play in a bold, new evolution of battle royale.
+                        </div>
+                    </div>
+                </div>
+                <div class="card card-2">
+                    <img class="game-image" src="/static/images/minecraft.jpg">
+                    <div class="game-info">
+                        <div class="game-title">Minecraft</div>
+                        <div>
+                            Minecraft focuses on allowing the player to explore, interact with, and modify a dynamically-generated map made of 
+                            one-cubic-meter-sized blocks. In addition to blocks, the environment features plants, mobs, and items. 
+                            Some activities in the game include mining for ore, fighting hostile mobs, and crafting new blocks and tools by 
+                            gathering various resources found in the game. 
+                        </div>
+                    </div>
+                </div>
+                <div class="card card-3">
+                    <img class="game-image" src="/static/images/gtav.jpg">
+                    <div class="game-info">
+                        <div class="game-title">Grand Theft Auto V</div>
+                        <div>
+                            The biggest, most dynamic and most diverse open world ever created, Grand Theft Auto V blends 
+                            storytelling and gameplay in new ways as players repeatedly jump in and out of the lives of the game’s 
+                            three lead characters, playing all sides of the game’s interwoven story. 
+                        </div>
+                    </div>    
+                </div>
+                <div class="card card-4">
+                    <img class="game-image" src="/static/images/valorant.jpg">
+                    <div class="game-info">
+                        <div class="game-title">Valorant</div>
+                        <div>
+                            Imagine this: tactical shooter meets hypernatural powers. Everyone’s got guns and a unique set of abilities, 
+                            so how do you beat someone with the speed of wind? Use your own moves to outplay them and beat them to the shot.
+                            Valorant is a game for bold strategists who dare to make the unexpected play, because if it wins, it works. 
+                        </div>
+                    </div>
+                </div>
+                <div class="card card-5">
+                    <img class="game-image" src="/static/images/rl.jpg">
+                    <div class="game-info">
+                        <div class="game-title">Rocket League</div>
+                        <div>
+                            Soccer meets racing once again in our long-awaited, MP-focused sequel to Supersonic Acrobatic Rocket-Powered Battle-Cars! 
+                            A futuristic Sports-Action game, Rocket League, equips players with booster-rigged vehicles that can be crashed into balls 
+                            for incredible goals or epic saves across multiple, highly-detailed arenas.
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-    {% endif %}
+
+        <script>
+            $(".carousel").owlCarousel({
+                margin: 10,
+                loop: true,
+                autoplay: true,
+                items:1
+            });
+        </script>
+
+        {%if logged_in == false%}
+
+            <div class="container">
+                <div class="row">
+                    <div class="col-12 col-md-6">
+                        <form>
+                            <a class="button" id="login" href="/login/">Login</a>
+                        </form>
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <form>
+                            <a class="button" id="register" href="/register/">Register</a>
+                        </form>
+                    </div>
+                </div>
+            </div>
+                
+        {%endif%}
+
+        {%if logged_in == true %}
+            <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+            <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+            <div class="genreal_chat">
+            <h2> Talk in the General Chat! </h2>
+                <widgetbot id = "widget"
+                server="910683723702370345"
+                channel="910683723702370348"
+                width="70%"
+                height="450"
+                ></widgetbot>
+                <script src="https://cdn.jsdelivr.net/npm/@widgetbot/html-embed"></script>
+            </div>
+        {% endif %}
+    
+        
+    </main>
 </body>
+    <footer id= "nav-footer" class= "footer">
+        {%if logged_in == true%}
+            <ul class="link-list-mdn">
+                <li><a href="#">Home</a></li>
+                <li><a href="/matchmaking/">Matchmaking</a></li>
+                    <li><a href="/addgame/">Add Game</a></li>
+                    {% if role == 0 %}
+                        <li><a href="/reviewgames/">Review Games</a></li>
+                        <li><a href="/reviewplayers/">Review Players</a></li>
+                        <li><a href="/register/admin/">New Admin</a></li>
+                    {% endif %}
+                </ul>
+            {% else %}
+                <ul class="link-list-mdn">
+                    <li><a href="#">Home</a></li>
+                    <li><a href="/register/">Register</a></li>
+                    <li><a href="/login/">Login</a></li>
+                </ul>
+            {% endif %}
+    </footer>
 </html>
