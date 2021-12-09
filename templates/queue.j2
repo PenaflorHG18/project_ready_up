@@ -59,29 +59,41 @@
                         <a class="dropdown-item" href="/logout/">Logout</a>
                     </div>
                 </li>
+                <li class="nav-item">
+                    <object class="svg-icon" data={{user.icon}}  width="32px" height="32px"> </object>
+                </li>
             </ul>
         </div>
     </nav>
+
+    <input id="userColor" type="hidden" value="{{user.icon_color}}">
+
     <body>
-        <main>
+        <main class="mx-auto my-4 w-50">
             <h1> {{game.title}} Player List </h1>
         </main>
-        <div class="container">
+        <div class="container mx-auto my-4 w-100">
             <div class="row">
             {% for player in players %}
-                <div class="col-4">
-                    <div class="card" style="width: 18rem;">
-                        <img class="card-img-top" src="..." alt="Card image cap">
+                {% if player.id != user.id %}
+                <div class="col-md-4">
+                    <div class="card my-4" style="width: 18rem;">
+                        <div class="card-img-top"> <object id="profile-icon-{{player.id}}" data={{player.icon}} width="288px" height="288px"> </object> </div>
                         <div class="card-body">
                             <h5 class="card-title">{{player.username}}</h5>
                             <p class="card-text">{{player.bio}}</p>
                             <a href="#" class="btn btn-primary">Match!</a>
+                            <input class="players" id="playerID" type="hidden" value="{{player.id}}">
+                            <input id="{{player.id}}" type="hidden" value="{{player.icon_color}}">
                         </div>
                     </div>
                 </div>
+                {% endif %}
             {% endfor %}
             </div>
         </div>
+        <script src="/static/scripts/setcolor.js"> </script>
+        <script src="/static/scripts/setcolor_players.js"> </script>
         <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>

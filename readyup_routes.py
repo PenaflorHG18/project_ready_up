@@ -1,6 +1,7 @@
 # Imports
 import os, sys
-from flask import Flask, request, render_template, redirect, url_for, abort
+import datetime
+from flask import Flask, request, render_template, redirect, url_for, abort, jsonify
 from flask import flash, session
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import backref
@@ -58,8 +59,10 @@ class User(UserMixin, db.Model):
     password_hash = db.Column(db.LargeBinary)
     bio = db.Column(db.Unicode, nullable=True)
     email = db.Column(db.Unicode, nullable=False)
-    last_active = db.Column(db.Float, nullable=False)
+    last_active = db.Column(db.DateTime, nullable=True)
     curr_game = db.Column(db.Integer, db.ForeignKey('Games.id'), nullable=True)
+    icon = db.Column(db.Unicode, nullable=False)
+    icon_color = db.Column(db.Unicode, nullable=True)
 
     # make a write-only password property that just updates the stored hash
     @property
@@ -85,8 +88,10 @@ class Game(db.Model):
 ## add tables to the db (ONLY DO THIS ONCE) ##
 # db.drop_all()
 # db.create_all()
-# admin_one = new_user = User(role=0, username='PlayerOne', password='readyup2021#', email='PlayerOne@gmail.com', last_active=0.0)
+# admin_one = User(role=0, username='PlayerOne', password='readyup2021#', email='PlayerOne@gmail.com', icon='/static/images/fish.svg')
+# player_one = User(role=1, username='Harry', password='password1', email='harry@gmail.com', icon='/static/images/panda.svg')
 # game_one = Game(title='Destiny', status='approved')
+# db.session.add(player_one)
 # db.session.add(admin_one)
 # db.session.add(game_one)
 # db.session.commit()
@@ -94,6 +99,29 @@ class Game(db.Model):
 #----------------------#
 #      App Routes      #
 #----------------------#
+
+## api routes ##
+@app.delete('/reviewgames/<int:game_id>')
+def remove_game(game_id):
+    game = Game.query.filter_by(id=game_id).first()
+    db.session.delete(game)
+    db.session.commit()
+    return 'Success'
+
+@app.post('/reviewgames/<int:game_id>')
+def approve_game(game_id):
+    game = Game.query.filter_by(id=game_id).first()
+    game.status = 'approved'
+    db.session.add(game)
+    db.session.commit()
+    return 'Success'
+
+@app.delete('/reviewplayer/<int:user_id>')
+def remove_player(user_id):
+    user = User.query.filter_by(id=user_id).first()
+    db.session.delete(user)
+    db.session.commit()
+    return 'Success'
 
 ## player registration page routes ##
 @app.get('/register/')
@@ -108,7 +136,7 @@ def post_register_form():
     if reg_form.validate():
         user = User.query.filter_by(username=reg_form.username.data).first()
         if user is None:
-            new_user = User(role=1, username=reg_form.username.data, password=reg_form.password.data, email=reg_form.email.data, last_active=0.0)
+            new_user = User(role=1, username=reg_form.username.data, password=reg_form.password.data, email=reg_form.email.data, icon='/static/images/fish.svg')
             db.session.add(new_user)
             db.session.commit()
             return redirect(url_for('get_login_form'))
@@ -126,13 +154,14 @@ def post_register_form():
 def get_register_admin():
     # TODO: Make this look nicer using bootstrap
     reg_form = AdminRegisterForm()
-    return render_template('admin_registration.j2', form = reg_form)
+    user = User.query.filter_by(username=session.get('curr_user')).first()
+    return render_template('admin_registration.j2', form = reg_form, user = user)
 
 @app.post('/register/admin/')
 def post_register_admin():
     reg_form = AdminRegisterForm()
     if reg_form.validate():
-        new_user = User(role=0, username=reg_form.username.data, password=reg_form.password.data, email=reg_form.email.data, last_active=0.0)
+        new_user = User(role=0, username=reg_form.username.data, password=reg_form.password.data, email=reg_form.email.data, icon='/static/images/fish.svg')
         db.session.add(new_user)
         db.session.commit()
         flash('Success!')
@@ -141,6 +170,26 @@ def post_register_admin():
         for field,error in reg_form.errors.items():
             flash(f"{field}: {error}")
         return redirect(url_for('get_register_admin'))
+
+## Game Review ##
+
+@app.route('/reviewgames/')
+@login_required
+def review_games():
+    role = session.get('curr_role')
+    game_list = Game.query.filter_by(status='unapproved').all()
+    user = User.query.filter_by(username=session.get('curr_user')).first()
+    return render_template('review_games.j2', role = role, games = game_list, user = user)
+
+## Player Review ##
+
+@app.route('/reviewplayers/')
+@login_required
+def review_players():
+    role = session.get('curr_role')
+    player_list = User.query.filter_by(role=1).all()
+    user = User.query.filter_by(username=session.get('curr_user')).first()
+    return render_template('review_players.j2', role = role, players = player_list, user = user)
 
 ## profile page routes ##
 
@@ -175,10 +224,13 @@ def post_edit_form():
             user.email = form.email.data
         if form.bio.data != '':
             user.bio = form.bio.data
+        if form.color.data != '':
+            user.icon_color = form.color.data
+        user.icon = "/static/images/" + form.icon.data
         db.session.add(user)
         db.session.commit()
         flash('Success!')
-        return redirect(url_for('view_profile'))
+        return redirect(url_for('edit_profile'))
     else:
         for field,error in form.errors.items():
             flash(f"{field}: {error}")
@@ -191,7 +243,8 @@ def get_game_form():
     # TODO: Make this look nicer using bootstrap
     add_form = GameForm()
     role = session.get('curr_role')
-    return render_template('add_game_page.j2', form = add_form, role = role)
+    user = User.query.filter_by(username=session.get('curr_user')).first()
+    return render_template('add_game_page.j2', form = add_form, role = role, user = user)
 
 @app.post('/addgame/')
 def post_game_form():
@@ -211,7 +264,6 @@ def post_game_form():
 
 @app.get('/login/')
 def get_login_form():
-    # TODO: Make this look nicer using bootstrap
     log_form = LoginForm()
     return render_template('login.j2', form=log_form)
 
@@ -253,46 +305,28 @@ def logout():
 @login_required
 def load_matchmaking():
     role = session.get('curr_role')
-    game_list = Game.query.all()
-    return render_template('matchmaking_page.j2', role = role, games = game_list)
+    game_list = Game.query.filter_by(status='approved').all()
+    user = User.query.filter_by(username=session.get('curr_user')).first()
+    return render_template('matchmaking_page.j2', role = role, games = game_list, user = user)
 
 @app.route('/queue/<int:id>')
 @login_required
 def load_queue(id):
     game = Game.query.filter_by(id=id).first()
     user = User.query.filter_by(username=session.get('curr_user')).first()
+    role = session.get('curr_role')
     user.curr_game = id
+    user.last_active = datetime.datetime.now()
     db.session.add(user)
     db.session.commit()
     players = User.query.filter_by(curr_game=id).all()
-    return render_template('queue.j2', players = players, game = game)
-
-# !!!!!! For reasons beyond comrehension this was working and then it wasnt !!!!!!
-# def get_load_matchmaking():
-#     form = MatchmakingForm()
-#     game_list = Game.query.all()
-#     form.title.choices = []
-#     for game in game_list:
-#         form.title.choices.append(game.title)
-#     return render_template('matchmaking_page.j2', form = form)
-
-# @app.post('/matchmaking/')
-# @login_required
-# def post_load_matchmaking():
-#     form = MatchmakingForm()
-#     game_list = Game.query.all()
-#     form.title.choices = []
-#     for game in game_list:
-#         form.title.choices.append(game.title)
-#     if form.validate():
-#         game_title = form.title.data
-#         print(game_title)
-#         return redirect(url_for("load_home_page"))
-#     else:
-#         for field,error in form.errors.items():
-#             flash(f"{field}: {error}")
-#         return redirect(url_for("get_load_matchmaking"))
-    
+    final = []
+    for player in players:
+        time_diff = user.last_active - player.last_active
+        minutes = abs(time_diff.seconds / 60)
+        if minutes <= 15:
+            final.append(player)
+    return render_template('queue.j2', players = final, game = game, user = user, role = role)
 
 ## home page route ##
 
@@ -300,7 +334,9 @@ def load_queue(id):
 def load_home_page():
     logged_in = current_user
     user_role = session.get('curr_role')
-    return render_template('home_page.j2', logged_in = logged_in.is_authenticated, role = user_role)
+    user = User.query.filter_by(username=session.get('curr_user')).first()
+    game_list = Game.query.filter_by(status='approved').all()
+    return render_template('home_page.j2', logged_in = logged_in.is_authenticated, role = user_role, user = user, games = game_list)
 
 @app.route('/')
 def index():

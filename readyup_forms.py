@@ -4,6 +4,7 @@ from wtforms.fields import StringField, SubmitField, PasswordField, SelectField
 from wtforms.fields.html5 import EmailField
 from wtforms.validators import InputRequired, Email, EqualTo, Length
 from wtforms.widgets import TextArea
+from wtforms.widgets.html5 import ColorInput
 
 class PlayerRegisterForm(FlaskForm):
     username = StringField("Username:", validators=[InputRequired()])
@@ -20,9 +21,11 @@ class AdminRegisterForm(FlaskForm):
     submit = SubmitField("Register")
 
 class EditProfileForm(FlaskForm):
+    color = StringField(widget=ColorInput())
     username = StringField("New Username:")
     email = EmailField("New Email:")
     bio = StringField("Bio:", widget=TextArea())
+    icon = SelectField("Icons ", choices=[('cow.svg', 'cow'), ('croc.svg', 'croc'), ('dog.svg', 'dog'), ('dolphin.svg', 'dolphin'), ('fish.svg', 'fish'), ('koala.svg', 'koala'), ('lion.svg', 'lion'), ('panda.svg', 'panda'), ('parrot.svg', 'parrot')])
     submit = SubmitField("Save Changes")
 
 class AdminLogin(FlaskForm):
