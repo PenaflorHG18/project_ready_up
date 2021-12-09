@@ -49,15 +49,18 @@
                     </li>
                     {% endif %}
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <div class="nav-link dropdown-toggle" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         Profile 
-                        </a>
+                        </div>
                         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                             <a class="dropdown-item" href="/profile/">View Profile</a>
                             <a class="dropdown-item" href="/profile/edit/">Edit Profile</a>
                         <div class="dropdown-divider"></div>
                             <a class="dropdown-item" href="/logout/">Logout</a>
                         </div>
+                    </li>
+                    <li class="nav-item">
+                        <object class="svg-icon" data={{user.icon}} fill={{user.icon_color}} width="32px" height="32px"> </object>
                     </li>
                 </ul>
             {% else %}
@@ -75,25 +78,40 @@
             {% endif %}
         </div>
     </nav>
-<body>
-    <main role="main">
-    </main>
 
-    {%if logged_in == true %}
-        <div class="genreal chat">
-        <h2> Talk in the General Chat! </h2>
-            <widgetbot
-            server="910683723702370345"
-            channel="910683723702370348"
-            width="70%"
-            height="450"
-            ></widgetbot>
-            <script src="https://cdn.jsdelivr.net/npm/@widgetbot/html-embed"></script>
-        </div>
-    {% endif %}
+    <input id="userColor" type="hidden" value="{{user.icon_color}}">
 
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
-</body>
+    <body>
+        <main role="main">
+            <div class="genreal chat container mx-auto my-4 w-100">
+                <h2 my-4> Login to talk in the Discord Chat! </h2>
+                <widgetbot
+                server="910683723702370345"
+                channel="910683723702370348"
+                width="70%"
+                height="450"
+                ></widgetbot>
+                <script src="https://cdn.jsdelivr.net/npm/@widgetbot/html-embed"></script>
+            </div>
+            <div class="container mx-auto my-4 w-100">
+                <h2> Available Games </h2>
+                <div class="row">
+                    {% for game in games %}
+                        <div class="col-md-4">
+                            <div class="card my-4" style="width: 18rem;">
+                                <img class="card-img-top" src="..." alt="No Image Available">
+                                <div class="card-body">
+                                    <h5 class="card-title">{{game.title}}</h5>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </main>
+        <script src="/static/scripts/setcolor.js"> </script>
+        <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    </body>
 </html>

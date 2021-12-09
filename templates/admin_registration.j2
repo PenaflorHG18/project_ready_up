@@ -56,9 +56,15 @@
                         <a class="dropdown-item" href="/logout/">Logout</a>
                     </div>
                 </li>
+                <li class="nav-item">
+                    <object class="svg-icon" data={{user.icon}}  width="32px" height="32px"> </object>
+                </li>
             </ul>
         </div>
     </nav>
+
+    <input id="userColor" type="hidden" value="{{user.icon_color}}">
+
     <div class="container">
       {% for message in get_flashed_messages() %}
         <div class="alert alert-warning d-flex align-items-center alert-dismissible fade show">
@@ -98,4 +104,5 @@
     </form>
   </main>
 </body>
+<script src="/static/scripts/setcolor.js"> </script>
 </html>
